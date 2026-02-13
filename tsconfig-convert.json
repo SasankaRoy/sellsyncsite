@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "target": "es2015",
+    "module": "esnext",
+    "declaration": false,
+    "outDir": "converted",
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": ["src/**/*.tsx"]
+}
