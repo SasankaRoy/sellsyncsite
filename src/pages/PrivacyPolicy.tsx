@@ -84,7 +84,7 @@ const PrivacyPolicy = () => {
           <p className="font-bold text-[#1C244B]">SellSync Support</p>
           <p>Email: support@sellsync.com</p>
           <p>Phone: (555) 123-4567</p>
-          <p>Address: 123 Tech Park Blvd, Suite 100, San Francisco, CA 94107</p>
+          <p>Address: 102 South Old Belair Road Grovetown, GA 30813</p>
         </div>
       </section>
     </PolicyLayout>

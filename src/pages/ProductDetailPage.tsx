@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import FeaturedProductSection from "@/components/ui/featured-product-section";
 import { LoginSidebar } from "@/components/ui/login-sidebar";
 import { Footer } from "@/components/ui/footer";
+import SEO from '@/components/SEO';
 
 interface Product {
   id: number;
@@ -167,6 +168,11 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans text-slate-900">
+      <SEO
+        title={currentProduct.title}
+        description={currentProduct.description}
+        image={currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : undefined}
+      />
       {/* --- PROFESSIONAL NAVBAR --- */}
       <header className="fixed top-0 z-50 w-full border-b bg-white shadow-md border-gray-200 text-foreground transition-all duration-300 backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md">
         <div className="container flex h-20 sm:h-24 items-center justify-between px-3 sm:px-4 md:border-x md:border-gray-200">

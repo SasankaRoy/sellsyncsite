@@ -120,7 +120,7 @@ export const RetailStoreDemo = () => {
             Built for Every Type of Retail Store
           </ContainerAnimated>
           <ContainerAnimated className="my-4 text-base text-slate-600 md:my-6 md:text-lg leading-relaxed">
-            SellSync adapts to your business workflow—no matter the retail category.
+            SellSync is engineered for versatility, serving a wide range of industries with tailored POS solutions for every retail niche.
           </ContainerAnimated>
           <ContainerAnimated className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {CATEGORIES.map((category, index) => {

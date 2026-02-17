@@ -53,6 +53,7 @@ import { LoginSidebar } from "@/components/ui/login-sidebar"
 import { AuroraBackground } from "@/components/ui/aurora-background"
 import FeaturedProductSection from "@/components/ui/featured-product-section"
 import { Footer } from "@/components/ui/footer"
+import SEO from "@/components/SEO"
 
 // Animation variants
 const fadeIn = {
@@ -158,7 +159,8 @@ export function SellSyncPOS() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20 overflow-x-hidden">
-      {/* Header */}
+      <SEO />
+      {/* Navigation */}
       <header
         className="fixed top-0 z-50 w-full border-b bg-white shadow-md border-gray-200 text-foreground transition-all duration-300 pointer-events-none backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-md"
       >
@@ -613,14 +615,9 @@ export function SellSyncPOS() {
 
 
 
-        {/* Retail Store Products Section */}
-        <section id="retail-store" className="w-full py-0">
-          <RetailStoreDemo />
-        </section>
-
         {/* Industries Section */}
-        <section id="industries">
-          <Testimonials />
+        <section id="industries" className="w-full py-8 sm:py-12 md:py-16">
+          <RetailStoreDemo />
         </section>
 
         {/* Why Choose Section */}

@@ -74,6 +74,7 @@ export function Footer() {
                 FAQ
               </Link>
             </nav>
+
           </div>
         </div>
         <div className="grid grid-cols-2 gap-6 sm:gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -106,13 +107,16 @@ export function Footer() {
         </div>
       </motion.div>
       <div className="border-t border-blue-300" style={{ backgroundColor: "#1C244B" }}>
-        <div className="container flex flex-col items-center justify-between gap-2 sm:gap-3 py-4 sm:py-6 md:h-16 md:flex-row md:py-0 px-3 sm:px-4">
+        <div className="container flex flex-col items-center justify-between gap-2 sm:gap-3 py-4 sm:py-6 md:min-h-[4rem] md:flex-row md:py-4 px-3 sm:px-4">
           <p className="text-xs text-blue-100 text-center md:text-left">
             &copy; {new Date().getFullYear()} SellSync. All rights reserved.
           </p>
-          <p className="text-xs text-blue-100 text-center md:text-right">Powered by cloud technology in the USA</p>
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <p className="text-xs text-blue-100 text-center md:text-right">102 South Old Belair Road, Grovetown, GA 30813</p>
+            <p className="text-[10px] text-blue-100/60 text-center md:text-right">Powered by cloud technology in the USA</p>
+          </div>
         </div>
       </div>
-    </footer>
+    </footer >
   )
 }

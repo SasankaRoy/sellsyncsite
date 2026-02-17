@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from "@/components/ui/navbar";
 import { Footer } from "@/components/ui/footer";
 import { motion } from "framer-motion";
+import SEO from "@/components/SEO";
 
 interface Section {
   id: string;
@@ -55,6 +56,7 @@ const PolicyLayout: React.FC<PolicyLayoutProps> = ({ title, sections, children }
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800 font-sans">
+      <SEO title={title} />
       <Navbar />
 
       {/* Hero Section */}
