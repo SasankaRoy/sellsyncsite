@@ -380,7 +380,7 @@ export const LoginSidebar: React.FC<LoginSidebarProps> = ({ variant = "ghost", c
                     onClick={() => window.open("https://demo.sellsync.com/", "_blank")}
                     className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 rounded-md transition-all shadow-sm"
                   >
-                    Go to POS Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                    Go to POS Dashboard <ArrowRight className="ml-2 h-4 w-4" /> 
                   </Button>
                 </div>
               ) : (
