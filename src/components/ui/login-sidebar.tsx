@@ -31,7 +31,7 @@ import Loader from "./loader";
 
 // Create axios instance
 const axiosInstance = axios.create({
-  baseURL: "https://sell-sync.kyptronix.us",
+  baseURL: "https://sell-sync.kyptronix.com",
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json",
