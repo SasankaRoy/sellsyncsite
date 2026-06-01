@@ -189,7 +189,7 @@ export const LoginSidebar: React.FC<LoginSidebarProps> = ({ variant = "ghost", c
             navigate("/builder");
           } else {
             console.log("Routing to POS system");
-            window.location.href = "https://sellsync.netlify.app/";
+            window.location.href = "https://demo.sellsync.com/";
           }
         }, 100);
       }
@@ -317,7 +317,7 @@ export const LoginSidebar: React.FC<LoginSidebarProps> = ({ variant = "ghost", c
 
             {/* Logo */}
             <div className="mb-4">
-              <img src="https://sellsync.netlify.app/assets/FullLogo2-BHrAzKAZ.png" alt="SellSync Logo" className="h-24 w-auto" />
+              <img src="https://demo.sellsync.com/assets/FullLogo2-BHrAzKAZ.png" alt="SellSync Logo" className="h-24 w-auto" />
             </div>
 
             <SheetTitle className="text-2xl font-semibold tracking-tight text-center text-foreground">
@@ -368,7 +368,7 @@ export const LoginSidebar: React.FC<LoginSidebarProps> = ({ variant = "ghost", c
               {loginType === "pos" ? (
                 <div className="flex flex-col gap-6 py-8 items-center text-center animate-in fade-in duration-300">
                   <div className="bg-orange-50 p-4 rounded-full">
-                    <img src="https://sellsync.netlify.app/assets/FullLogo2-BHrAzKAZ.png" alt="POS" className="h-12 w-auto opacity-80" />
+                    <img src="https://demo.sellsync.com/assets/FullLogo2-BHrAzKAZ.png" alt="POS" className="h-12 w-auto opacity-80" />
                   </div>
                   <div className="space-y-2">
                     <h3 className="font-semibold text-lg">Access POS System</h3>
@@ -377,7 +377,7 @@ export const LoginSidebar: React.FC<LoginSidebarProps> = ({ variant = "ghost", c
                     </p>
                   </div>
                   <Button
-                    onClick={() => window.open("https://sellsync.netlify.app/", "_blank")}
+                    onClick={() => window.open("https://demo.sellsync.com/", "_blank")}
                     className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 rounded-md transition-all shadow-sm"
                   >
                     Go to POS Dashboard <ArrowRight className="ml-2 h-4 w-4" />
