@@ -326,7 +326,7 @@ const ProductCard: React.FC<{
 
         {/* Image Area */}
         <div className="hard-img h-72 w-full flex items-center justify-center mb-8 gap-1">
-          {(product.id === 8 || product.id === 1 || product.id === 7) ? (
+          {(product.id === 1) ? (
             product.images.slice(0, 2).map((img: string, i: number) => (
               <img
                 key={i}
