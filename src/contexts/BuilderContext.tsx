@@ -86,7 +86,7 @@ const getDefaultSections = (): SectionData[] => [
       heading: 'About Us',
       description: 'We are passionate about helping businesses create stunning online experiences. Our platform empowers users to build professional websites without any coding knowledge.',
       image: {
-        src: 'https://sellsynctemplatebackend.onrender.com/assets/about-default.jpg',
+        src: 'https://api2.sellsync.com/assets/about-default.jpg',
         alt: 'About Us',
       },
       buttons: [
@@ -112,21 +112,21 @@ const getDefaultSections = (): SectionData[] => [
       items: [
         {
           id: '1',
-          image: { src: 'https://sellsynctemplatebackend.onrender.com/assets/service-1.jpg', alt: 'Web Development' },
+          image: { src: 'https://api2.sellsync.com/assets/service-1.jpg', alt: 'Web Development' },
           title: 'Web Development',
           description: 'Custom websites built with modern technologies',
           link: '#contact',
         },
         {
           id: '2',
-          image: { src: 'https://sellsynctemplatebackend.onrender.com/assets/service-2.jpg', alt: 'Mobile Apps' },
+          image: { src: 'https://api2.sellsync.com/assets/service-2.jpg', alt: 'Mobile Apps' },
           title: 'Mobile Apps',
           description: 'Native and cross-platform mobile solutions',
           link: '#contact',
         },
         {
           id: '3',
-          image: { src: 'https://sellsynctemplatebackend.onrender.com/assets/service-3.jpg', alt: 'Branding' },
+          image: { src: 'https://api2.sellsync.com/assets/service-3.jpg', alt: 'Branding' },
           title: 'Branding & Design',
           description: 'Complete brand identity and design services',
           link: '#contact',
@@ -213,7 +213,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
 
   const loadWebsite = async () => {
     try {
-      const response = await fetch('https://sellsynctemplatebackend.onrender.com/api/website');
+      const response = await fetch('https://api2.sellsync.com/api/website');
       if (response.ok) {
         const website = await response.json();
         if (website) {
@@ -256,7 +256,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     setConfig(updated);
 
     try {
-      const response = await fetch('https://sellsynctemplatebackend.onrender.com/api/website', {
+      const response = await fetch('https://api2.sellsync.com/api/website', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     setConfig(updated);
 
     try {
-      const response = await fetch('https://sellsynctemplatebackend.onrender.com/api/website', {
+      const response = await fetch('https://api2.sellsync.com/api/website', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -372,7 +372,7 @@ export function BuilderProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Save immediately - don't wait for auto-save
-    fetch('https://sellsynctemplatebackend.onrender.com/api/website', {
+    fetch('https://api2.sellsync.com/api/website', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

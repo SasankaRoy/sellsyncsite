@@ -10,9 +10,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { SignupModal } from "@/components/ui/signup-modal";
 
 function Pricing() {
   const [isMobile, setIsMobile] = useState(false);
+  const [signupModalOpen, setSignupModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -215,7 +218,16 @@ function Pricing() {
                           </div>
                         ))}
                       </div>
-                      <Button variant={card.buttonVariant} className={card.buttonClassName || "gap-4"}>
+                      <Button
+                        variant={card.buttonVariant}
+                        className={card.buttonClassName || "gap-4"}
+                        onClick={() => {
+                          if (card.buttonText === "Sign up today") {
+                            setSelectedPlan(card.title);
+                            setSignupModalOpen(true);
+                          }
+                        }}
+                      >
                         {card.buttonText} {card.buttonIcon}
                       </Button>
                     </div>
@@ -226,6 +238,11 @@ function Pricing() {
           </motion.div>
         </motion.div>
       </div>
+      <SignupModal
+        open={signupModalOpen}
+        onOpenChange={setSignupModalOpen}
+        planName={selectedPlan}
+      />
     </div>
   );
 }

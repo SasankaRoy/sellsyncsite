@@ -102,7 +102,7 @@ export default function Admin() {
       <header className="h-12 sm:h-14 border-b bg-white flex items-center justify-between px-2 sm:px-4 md:px-6 shadow-sm sticky top-0 z-[50]">
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0">
           <img
-            src="https://sellsync.netlify.app/assets/FullLogo2-BHrAzKAZ.png"
+            src="https://demo.sellsync.com/assets/FullLogo2-BHrAzKAZ.png"
             alt="SellSync"
             className="h-7 sm:h-8 md:h-10 flex-shrink-0"
           />
