@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -17,11 +18,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { submitSignup } from "@/lib/services/signup";
+import type { AddonListItem } from "@/lib/services/planList";
+
+interface PlanInfo {
+  title: string;
+  planId: string;
+  cardIndex: number;
+}
 
 interface SignupModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  planName?: string;
+  planInfo?: PlanInfo;
+  isYearly: boolean;
+  allAddons: AddonListItem[];
+  toggledAddons?: Set<string>;
 }
 
 const countries = [
@@ -54,7 +66,7 @@ const businessTypes = [
   "Other",
 ];
 
-function SignupModal({ open, onOpenChange, planName }: SignupModalProps) {
+function SignupModal({ open, onOpenChange, planInfo, isYearly, allAddons, toggledAddons }: SignupModalProps) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -72,22 +84,52 @@ function SignupModal({ open, onOpenChange, planName }: SignupModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!planInfo) return;
+
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Build extra_addon array from toggled add-ons (exclude already-included ones)
+    const extraAddon = toggledAddons
+      ? allAddons
+          .filter((addon) => toggledAddons.has(addon._id))
+          .map((addon) => ({
+            addon_id: addon._id,
+            addon_name: addon.name,
+            addon_price: isYearly ? addon.yearly_price : addon.monthly_price,
+          }))
+      : [];
 
-    setIsSubmitting(false);
-    onOpenChange(false);
-    setFormData({
-      fullName: "",
-      email: "",
-      contactNumber: "",
-      businessRegNumber: "",
-      businessType: "",
-      businessName: "",
-      countryLocation: "",
-    });
+    try {
+      const response = await submitSignup({
+        full_name: formData.fullName,
+        email: formData.email,
+        contact_number: formData.contactNumber,
+        business_name: formData.businessName,
+        business_type: formData.businessType,
+        country_location: formData.countryLocation,
+        subscription_plan_id: planInfo.planId,
+        package_duration_type: isYearly ? "yearly" : "monthly",
+        extra_addon: extraAddon,
+      });
+
+      toast.success(response.message || "Registration submitted successfully!");
+      onOpenChange(false);
+      setFormData({
+        fullName: "",
+        email: "",
+        contactNumber: "",
+        businessRegNumber: "",
+        businessType: "",
+        businessName: "",
+        countryLocation: "",
+      });
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -96,7 +138,7 @@ function SignupModal({ open, onOpenChange, planName }: SignupModalProps) {
         <DialogHeader className="space-y-3 pb-2">
           <DialogTitle className="text-2xl font-bold text-center">
             <span className="bg-gradient-to-r from-amber-600 to-orange-700 bg-clip-text text-transparent">
-              {planName ? `Sign Up for ${planName}` : "Get Started Today"}
+              {planInfo ? `Sign Up for ${planInfo.title}` : "Get Started Today"}
             </span>
           </DialogTitle>
           <DialogDescription className="text-center text-base text-gray-600">
