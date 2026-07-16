@@ -16,6 +16,12 @@ export interface SignupRequest {
   subscription_plan_id: string;
   package_duration_type: "monthly" | "yearly";
   extra_addon: ExtraAddon[];
+  hardware_kit_quantity?: number;
+  address_line_1?: string;
+  address_line_2?: string;
+  city?: string;
+  state_province?: string;
+  zip_postal_code?: string;
 }
 
 export interface SignupResponse {

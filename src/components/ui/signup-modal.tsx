@@ -66,17 +66,29 @@ const businessTypes = [
   "Other",
 ];
 
+const emptyFormData = {
+  fullName: "",
+  email: "",
+  contactNumber: "",
+  businessRegNumber: "",
+  businessType: "",
+  businessName: "",
+  countryLocation: "",
+  hardwareKitCount: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  stateProvince: "",
+  zipCode: "",
+};
+
 function SignupModal({ open, onOpenChange, planInfo, isYearly, allAddons, toggledAddons }: SignupModalProps) {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    contactNumber: "",
-    businessRegNumber: "",
-    businessType: "",
-    businessName: "",
-    countryLocation: "",
-  });
+  const [formData, setFormData] = useState(emptyFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const requiresHardwareDetails = allAddons.some(
+    (addon) => toggledAddons?.has(addon._id) && /hardware/i.test(addon.name),
+  );
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -110,19 +122,21 @@ function SignupModal({ open, onOpenChange, planInfo, isYearly, allAddons, toggle
         subscription_plan_id: planInfo.planId,
         package_duration_type: isYearly ? "yearly" : "monthly",
         extra_addon: extraAddon,
+        ...(requiresHardwareDetails
+          ? {
+              hardware_kit_quantity: Number(formData.hardwareKitCount) || undefined,
+              address_line_1: formData.addressLine1,
+              address_line_2: formData.addressLine2,
+              city: formData.city,
+              state_province: formData.stateProvince,
+              zip_postal_code: formData.zipCode,
+            }
+          : {}),
       });
 
       toast.success(response.message || "Registration submitted successfully!");
       onOpenChange(false);
-      setFormData({
-        fullName: "",
-        email: "",
-        contactNumber: "",
-        businessRegNumber: "",
-        businessType: "",
-        businessName: "",
-        countryLocation: "",
-      });
+      setFormData(emptyFormData);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong";
@@ -269,6 +283,101 @@ function SignupModal({ open, onOpenChange, planInfo, isYearly, allAddons, toggle
                 </SelectContent>
               </Select>
             </div>
+
+            {requiresHardwareDetails && (
+              <>
+                {/* Number of Hardware Kits */}
+                <div className="space-y-2">
+                  <Label htmlFor="hardwareKitCount" className="text-sm font-medium text-gray-700">
+                    Number of Hardware Kit <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="hardwareKitCount"
+                    type="number"
+                    min={1}
+                    placeholder="1"
+                    value={formData.hardwareKitCount}
+                    onChange={(e) => handleChange("hardwareKitCount", e.target.value)}
+                    required
+                    className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                  />
+                </div>
+
+                {/* Address Line 1 */}
+                <div className="space-y-2">
+                  <Label htmlFor="addressLine1" className="text-sm font-medium text-gray-700">
+                    Address Line 1 <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="addressLine1"
+                    placeholder="Street address"
+                    value={formData.addressLine1}
+                    onChange={(e) => handleChange("addressLine1", e.target.value)}
+                    required
+                    className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                  />
+                </div>
+
+                {/* Address Line 2 */}
+                <div className="space-y-2">
+                  <Label htmlFor="addressLine2" className="text-sm font-medium text-gray-700">
+                    Address Line 2
+                  </Label>
+                  <Input
+                    id="addressLine2"
+                    placeholder="Apartment, suite, etc. (optional)"
+                    value={formData.addressLine2}
+                    onChange={(e) => handleChange("addressLine2", e.target.value)}
+                    className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                  />
+                </div>
+
+                {/* City & State/Province */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="city" className="text-sm font-medium text-gray-700">
+                      City <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="city"
+                      placeholder="City"
+                      value={formData.city}
+                      onChange={(e) => handleChange("city", e.target.value)}
+                      required
+                      className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="stateProvince" className="text-sm font-medium text-gray-700">
+                      State/Province <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="stateProvince"
+                      placeholder="State/Province"
+                      value={formData.stateProvince}
+                      onChange={(e) => handleChange("stateProvince", e.target.value)}
+                      required
+                      className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                    />
+                  </div>
+                </div>
+
+                {/* ZIP/Postal Code */}
+                <div className="space-y-2">
+                  <Label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
+                    ZIP/Postal Code <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="zipCode"
+                    placeholder="ZIP/Postal Code"
+                    value={formData.zipCode}
+                    onChange={(e) => handleChange("zipCode", e.target.value)}
+                    required
+                    className="border-amber-200 focus-visible:ring-amber-500 bg-white/80"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           <div className="pt-2">
