@@ -13,7 +13,11 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SignupModal } from "@/components/ui/signup-modal";
 import { fetchPlanList, fetchAddonList } from "@/lib/services/planList";
-import type { PlanItem } from "@/lib/services/planList";
+import type { PlanItem, AddonListItem } from "@/lib/services/planList";
+import {
+  fetchHardwareKitList,
+  getHardwareKitDisplayName,
+} from "@/lib/services/hardwareKit";
 
 const featureDescriptions: Record<string, string> = {
   "Fast Checkout": "Quick and efficient transaction processing.",
@@ -33,6 +37,10 @@ const featureDescriptions: Record<string, string> = {
 
 function getFeatureDescription(feature: string): string {
   return featureDescriptions[feature] || `Includes ${feature.toLowerCase()} support.`;
+}
+
+function isHardwareAddon(addon: AddonListItem): boolean {
+  return /hardware/i.test(addon.name);
 }
 
 function getEnrichedAddonIds(plan: PlanItem): Set<string> {
@@ -96,6 +104,7 @@ function Pricing() {
   const [signupModalOpen, setSignupModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<SelectedPlanInfo | undefined>(undefined);
   const [toggledAddons, setToggledAddons] = useState<Record<number, Set<string>>>({});
+  const [selectedHardwareKit, setSelectedHardwareKit] = useState<Record<number, string>>({});
 
   useEffect(() => {
     const checkMobile = () => {
@@ -117,10 +126,41 @@ function Pricing() {
   });
 
   const allAddons = addonListData?.results ?? [];
+  const hardwareAddonIds = new Set(
+    allAddons.filter(isHardwareAddon).map((addon) => addon._id),
+  );
 
   const pricingCards: PricingCard[] = planListData?.results
     ? buildPricingCards(planListData.results)
     : [];
+
+  const isAddonIncluded = (card: PricingCard, addonId: string): boolean => {
+    return card.planAddonIds.has(addonId);
+  };
+
+  const isAddonToggled = (cardIndex: number, addonId: string): boolean => {
+    return toggledAddons[cardIndex]?.has(addonId) ?? false;
+  };
+
+  const isHardwareActiveForCard = (cardIndex: number): boolean => {
+    const card = pricingCards[cardIndex];
+    if (!card) return false;
+    return Array.from(hardwareAddonIds).some(
+      (id) => isAddonIncluded(card, id) || isAddonToggled(cardIndex, id),
+    );
+  };
+
+  const anyHardwareAddonActive = pricingCards.some((_, cardIndex) =>
+    isHardwareActiveForCard(cardIndex),
+  );
+
+  const { data: hardwareKitListData, isLoading: isHardwareKitListLoading } = useQuery({
+    queryKey: ["public-hardware-kit-list", 1, 20],
+    queryFn: () => fetchHardwareKitList({ page: 1, limit: 20 }),
+    enabled: anyHardwareAddonActive,
+  });
+
+  const hardwareKits = hardwareKitListData?.results ?? [];
 
   const handleToggleAddon = (cardIndex: number, addonId: string) => {
     setToggledAddons((prev) => {
@@ -132,14 +172,21 @@ function Pricing() {
       }
       return { ...prev, [cardIndex]: current };
     });
+
+    if (hardwareAddonIds.has(addonId)) {
+      const wasToggled = toggledAddons[cardIndex]?.has(addonId) ?? false;
+      if (wasToggled) {
+        setSelectedHardwareKit((prev) => {
+          const next = { ...prev };
+          delete next[cardIndex];
+          return next;
+        });
+      }
+    }
   };
 
-  const isAddonIncluded = (card: PricingCard, addonId: string): boolean => {
-    return card.planAddonIds.has(addonId);
-  };
-
-  const isAddonToggled = (cardIndex: number, addonId: string): boolean => {
-    return toggledAddons[cardIndex]?.has(addonId) ?? false;
+  const handleSelectHardwareKit = (cardIndex: number, kitId: string) => {
+    setSelectedHardwareKit((prev) => ({ ...prev, [cardIndex]: kitId }));
   };
 
   return (
@@ -312,14 +359,15 @@ function Pricing() {
                                   const included = isAddonIncluded(card, addon._id);
                                   const toggled = isAddonToggled(cardIndex, addon._id);
                                   const active = included || toggled;
+                                  const isHardware = isHardwareAddon(addon);
 
                                   const addonPrice = isYearly
                                     ? `+$${addon.yearly_price}/yr`
                                     : `+$${addon.monthly_price}/mo`;
 
                                   return (
+                                    <div key={addon._id}>
                                     <div
-                                      key={addon._id}
                                       className={`flex items-center justify-between rounded-lg border px-3 py-2.5 text-sm transition-colors ${
                                         active
                                           ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/40 dark:bg-emerald-950/20"
@@ -362,6 +410,53 @@ function Pricing() {
                                         )}
                                       </div>
                                     </div>
+
+                                    {isHardware && active && (
+                                      <div className="mt-2 ml-1 rounded-lg border border-border bg-muted/30 p-3">
+                                        <p className="text-xs font-medium text-muted-foreground mb-2">
+                                          Select a hardware kit
+                                        </p>
+                                        {isHardwareKitListLoading ? (
+                                          <div className="flex items-center gap-2 text-xs text-muted-foreground py-2">
+                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                            Loading hardware kits...
+                                          </div>
+                                        ) : hardwareKits.length === 0 ? (
+                                          <p className="text-xs text-muted-foreground py-1">
+                                            No hardware kits available.
+                                          </p>
+                                        ) : (
+                                          <div className="space-y-1.5">
+                                            {hardwareKits.map((kit) => {
+                                              const isSelected =
+                                                selectedHardwareKit[cardIndex] === kit.id;
+                                              return (
+                                                <button
+                                                  type="button"
+                                                  key={kit.id}
+                                                  onClick={() =>
+                                                    handleSelectHardwareKit(cardIndex, kit.id)
+                                                  }
+                                                  className={`flex w-full items-center justify-between rounded-md border px-2.5 py-1.5 text-xs text-left transition-colors ${
+                                                    isSelected
+                                                      ? "border-amber-400 bg-amber-100/60 dark:bg-amber-900/20"
+                                                      : "border-border bg-background hover:bg-accent"
+                                                  }`}
+                                                >
+                                                  <span className="truncate">
+                                                    {getHardwareKitDisplayName(kit)}
+                                                  </span>
+                                                  {isSelected && (
+                                                    <CircleCheckBig className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400 ml-2" />
+                                                  )}
+                                                </button>
+                                              );
+                                            })}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
                                   );
                                 })}
                               </div>

@@ -124,12 +124,12 @@ function SignupModal({ open, onOpenChange, planInfo, isYearly, allAddons, toggle
         extra_addon: extraAddon,
         ...(requiresHardwareDetails
           ? {
-              hardware_kit_quantity: Number(formData.hardwareKitCount) || undefined,
-              address_line_1: formData.addressLine1,
-              address_line_2: formData.addressLine2,
-              city: formData.city,
-              state_province: formData.stateProvince,
-              zip_postal_code: formData.zipCode,
+              number_of_hardware_kit: Number(formData.hardwareKitCount) || undefined,
+              hardware_kit_addressline1: formData.addressLine1,
+              hardware_kit_addressline2: formData.addressLine2,
+              hardware_kit_city: formData.city,
+              hardware_kit_state: formData.stateProvince,
+              hardware_kit_zipcode: formData.zipCode,
             }
           : {}),
       });
